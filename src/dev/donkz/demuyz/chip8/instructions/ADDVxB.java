@@ -16,7 +16,7 @@ public class ADDVxB extends Instruction {
 
         Assertions.assertRegister(parameters[0]);
         Register vx = cpu.getRegister(parameters[0]);
-        vx.setValue(vx.getValue() + parameters[1]);
+        vx.setValue((vx.getValue() + parameters[1]) & 0xFF);
     }
 
     @Override

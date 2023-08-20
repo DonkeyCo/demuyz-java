@@ -1,5 +1,6 @@
 package dev.donkz.demuyz.chip8;
 
+import dev.donkz.demuyz.chip8.instructions.JP;
 import dev.donkz.demuyz.core.emulator.BaseInstruction;
 import dev.donkz.demuyz.core.emulator.CPU;
 import dev.donkz.demuyz.core.util.binary.BinaryUtil;
@@ -10,7 +11,6 @@ import dev.donkz.demuyz.ui.swing.SwingDisplay;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Stack;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +34,7 @@ public class Chip8 implements CPU<Integer> {
     public Chip8(Logger logger) {
         this.logger = logger;
         memory = new Memory();
-        display = new Display(new SwingDisplay(64, 32, 5)); // TODO: Change this up fr fr
+        display = new Display(new SwingDisplay(64, 32, 5));
         PC = 0x200;
         I = new Register();
         stack = new Stack<>();
@@ -69,12 +69,14 @@ public class Chip8 implements CPU<Integer> {
 
     @Override
     public void cycle() {
-        logger.debug("CYCLE");
+        logger.debug("Cycle", "CPU");
         int instructionCode = fetch();
         Instruction instruction = decode(instructionCode);
-        assert instruction != null;
         execute(instruction);
-        PC += 2;
+
+        if (!(instruction instanceof JP)) {
+            PC += 2;
+        }
     }
 
     @Override

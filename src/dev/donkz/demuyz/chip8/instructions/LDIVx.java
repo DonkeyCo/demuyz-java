@@ -3,6 +3,7 @@ package dev.donkz.demuyz.chip8.instructions;
 import dev.donkz.demuyz.chip8.Chip8;
 import dev.donkz.demuyz.chip8.Instruction;
 import dev.donkz.demuyz.chip8.util.Assertions;
+import dev.donkz.demuyz.core.util.binary.BinaryUtil;
 
 public class LDIVx extends Instruction {
     public LDIVx(int instructionCode, Chip8 cpu) {
@@ -12,12 +13,14 @@ public class LDIVx extends Instruction {
     @Override
     public void execute() {
         logger.debug("LD I, Vx", "Instruction");
+        logger.debug("Load V0 to V" + parameters[0] + " into Memory at " + BinaryUtil.getHexString(cpu.getI().getValue(), 4),
+                "Instruction", "LD");
 
         Assertions.assertRegister(parameters[0]);
 
         int[] buffer = new int[parameters[0] + 1];
         for (int i = 0; i <= parameters[0]; i++) {
-            buffer[i] = cpu.getRegister(i).getValue();
+            buffer[i] = cpu.getRegister(i).getValue() & 0xFF;
         }
         cpu.getMemory().write(buffer, cpu.getI().getValue());
     }

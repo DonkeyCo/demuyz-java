@@ -2,6 +2,8 @@ package dev.donkz.demuyz.chip8.instructions;
 
 import dev.donkz.demuyz.chip8.Chip8;
 import dev.donkz.demuyz.chip8.Instruction;
+import dev.donkz.demuyz.chip8.Register;
+import dev.donkz.demuyz.chip8.util.Assertions;
 
 public class LDBVx extends Instruction {
     public LDBVx(int instructionCode, Chip8 cpu) {
@@ -12,7 +14,17 @@ public class LDBVx extends Instruction {
     public void execute() {
         logger.debug("LD B, Vx", "Instruction");
 
-        // TODO: Store BCD representation of VX in memory I, I + 1, I + 2
+        Assertions.assertRegister(parameters[0]);
+
+        Register x = cpu.getRegister(parameters[0]);
+        Register i = cpu.getI();
+
+        int value = x.getValue();
+        cpu.getMemory().write(new int[]{
+                Math.floorDiv(value, 100),
+                Math.floorDiv(value, 10) % 10,
+                value % 10
+        }, i.getValue());
     }
 
     @Override

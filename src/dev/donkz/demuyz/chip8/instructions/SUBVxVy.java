@@ -19,16 +19,10 @@ public class SUBVxVy extends Instruction {
 
         Register x = cpu.getRegister(parameters[0]);
         Register y = cpu.getRegister(parameters[1]);
+        logger.debug(x.getValue() + " - " + y.getValue());
 
-        int diff = x.getValue() - y.getValue();
-        int borrow = 0;
-        if (y.getValue() > x.getValue()) {
-            diff = y.getValue() - x.getValue();
-            borrow = 1;
-        }
-
-        x.setValue(diff);
-        cpu.getRegister(0xF).setValue(borrow);
+        x.setValue((x.getValue() - y.getValue()) & 0xFF);
+        cpu.getRegister(0xF).setValue(x.getValue() > y.getValue() ? 1 : 0);
     }
 
     @Override

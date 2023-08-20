@@ -5,6 +5,7 @@ import dev.donkz.demuyz.core.driver.DisplayDriver;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferStrategy;
 import java.util.Objects;
 
 public class SwingDisplay extends JFrame implements DisplayDriver {
@@ -59,7 +60,11 @@ public class SwingDisplay extends JFrame implements DisplayDriver {
 
     @Override
     public void paint(Graphics graphics) {
-        Graphics g = canvas.getBufferStrategy().getDrawGraphics();
+        BufferStrategy strategy = canvas.getBufferStrategy();
+        if (strategy == null) {
+            return;
+        }
+        Graphics g = strategy.getDrawGraphics();
 
         for (int x = 0; x < screenWidth; x++) {
             for (int y = 0; y < screenHeight; y++) {

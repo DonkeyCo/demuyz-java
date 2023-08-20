@@ -15,8 +15,12 @@ public abstract class BaseMemory {
      * @param targetAddress target address
      */
     public void write(int[] content, int targetAddress) {
-        if (content.length - targetAddress >= 0) {
-            System.arraycopy(content, 0, memory, targetAddress, content.length);
+        for (int i = targetAddress; i < targetAddress + content.length; i++) {
+            int val = content[i - targetAddress];
+            if (val < 0) {
+                val &= 0xFF;
+            }
+            memory[i] = val;
         }
     }
 
