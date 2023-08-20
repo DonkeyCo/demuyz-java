@@ -5,16 +5,20 @@ import dev.donkz.demuyz.core.emulator.CPU;
 import dev.donkz.demuyz.core.util.binary.BinaryUtil;
 import dev.donkz.demuyz.core.util.files.FileHandler;
 import dev.donkz.demuyz.core.util.logger.Logger;
-import dev.donkz.demuyz.ui.AWTDisplayDriver;
+import dev.donkz.demuyz.ui.swing.SwingDisplay;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Stack;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 public class Chip8 implements CPU<Integer> {
     public static final int REGISTERS = 16;
+    public static final long CYCLE_TIME = 60L;
 
     private final Logger logger;
 
@@ -30,7 +34,7 @@ public class Chip8 implements CPU<Integer> {
     public Chip8(Logger logger) {
         this.logger = logger;
         memory = new Memory();
-        display = new Display(new AWTDisplayDriver()); // TODO: Change this up fr fr
+        display = new Display(new SwingDisplay(64, 32, 5)); // TODO: Change this up fr fr
         PC = 0x200;
         I = new Register();
         stack = new Stack<>();
@@ -48,17 +52,34 @@ public class Chip8 implements CPU<Integer> {
     }
 
     @Override
+    public void start() {
+        display.on();
+        ScheduledExecutorService s = new ScheduledThreadPoolExecutor(1);
+        s.scheduleAtFixedRate(this::cycle, 0, 100, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public void run() {
+        try {
+            cycle();
+        } catch (Throwable t) {
+            System.out.println("Caught exception in Chip8#run. StackTrace: \n" + t.getStackTrace());
+        }
+    }
+
+    @Override
     public void cycle() {
+        logger.debug("CYCLE");
         int instructionCode = fetch();
         Instruction instruction = decode(instructionCode);
         assert instruction != null;
         execute(instruction);
+        PC += 2;
     }
 
     @Override
     public Integer fetch() {
         int[] addresses = memory.read(PC, 2);
-        PC += 2;
         return addresses[0] << 8 | addresses[1];
     }
 

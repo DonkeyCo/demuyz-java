@@ -7,6 +7,7 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven { url "https://jogamp.org/deployment/maven" }
 }
 
 sourceSets {
@@ -15,4 +16,8 @@ sourceSets {
             srcDirs = ['src']
         }
     }
+}
+
+dependencies {
+    implementation 'org.lwjgl:lwjgl:3.3.2'
 }

@@ -7,9 +7,13 @@ import dev.donkz.demuyz.chip8.Instruction;
  *
  * Defines methods that a CPU needs to provide to function correctly.
  */
-public interface CPU<T> {
+public interface CPU<T> extends Runnable {
 
     void loadROM(String path);
+
+    void start();
+
+    void run();
 
     void cycle();
 

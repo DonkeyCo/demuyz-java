@@ -21,6 +21,14 @@ public abstract class BaseDisplay {
         this.scale = scale;
     }
 
+    public void on() {
+        driver.on();
+    }
+
+    public void off() {
+        driver.off();
+    }
+
     public int getWidth() {
         return width;
     }

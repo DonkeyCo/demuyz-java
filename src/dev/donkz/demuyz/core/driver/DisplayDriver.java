@@ -11,6 +11,8 @@ public interface DisplayDriver {
      */
     void drawPixel(int x, int y, Color color);
 
+    Color getPixel(int x, int y);
+
     /**
      * Clears display
      */
@@ -20,4 +22,12 @@ public interface DisplayDriver {
      * Renders the display
      */
     void render();
+
+    void on();
+
+    void off();
+
+    int getScreenWidth();
+
+    int getScreenHeight();
 }
