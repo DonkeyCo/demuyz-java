@@ -23,17 +23,20 @@ public class Display extends BaseDisplay {
             for (int b = 7; b >= 0; b--) {
                 int bit = (spriteByte >> b) & 1;
                 int pX = (x + 7 - b) % driver.getScreenWidth(), pY = (y + i) % driver.getScreenHeight();
+
+                main.java.dev.donkz.demuyz.core.base.Color cdsa = driver.getPixel(pX, pY);
+
                 int currentColor = Arrays.stream(Color.values())
                         .filter(c -> c.color == driver.getPixel(pX, pY))
-                        .findFirst().orElse(Color.WHITE).ordinal();
-                Color newColor = Color.values()[bit];
-                int color = currentColor ^ newColor.ordinal();
-
+                        .findFirst().orElse(Color.BLACK).ordinal();
+                Color newColor = Color.values()[bit ^ currentColor];
                 driver.drawPixel(pX, pY, newColor.color);
-                collision |= (currentColor ^ color) == 1;
+
+                collision |= currentColor == 1 && newColor.ordinal() == 0;
             }
         }
 
+        driver.render();
         return collision;
     }
 

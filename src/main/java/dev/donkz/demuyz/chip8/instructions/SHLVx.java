@@ -18,8 +18,9 @@ public class SHLVx extends Instruction {
 
         Register x = cpu.getRegister(parameters[0]);
 
-        cpu.getRegister(0xF).setValue((x.getValue() >> 7) & 1);
+        int val = (x.getValue() >> 7) & 1;
         x.setValue((x.getValue() << 1) & 0xFF);
+        cpu.getRegister(0xF).setValue(val);
     }
 
     @Override

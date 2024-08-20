@@ -2,8 +2,9 @@ package main.java.dev.donkz.demuyz.chip8.instructions;
 
 import main.java.dev.donkz.demuyz.chip8.Chip8;
 import main.java.dev.donkz.demuyz.chip8.Instruction;
+import main.java.dev.donkz.demuyz.core.emulator.Jumping;
 
-public class JP extends Instruction {
+public class JP extends Instruction implements Jumping {
     public JP(int instructionCode, Chip8 cpu) {
         super(instructionCode, cpu, 1);
     }

@@ -21,13 +21,12 @@ public class SUBNVxVy extends Instruction {
 
         int diff = y.getValue() - x.getValue();
         int borrow = 0;
-        if (x.getValue() > y.getValue()) {
-            diff = x.getValue() - y.getValue();
+        if (y.getValue() > x.getValue()) {
             borrow = 1;
         }
 
+        x.setValue(diff & 0xFF);
         cpu.getRegister(0xF).setValue(borrow);
-        x.setValue(diff);
     }
 
     @Override

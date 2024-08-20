@@ -90,7 +90,6 @@ public class SwingDisplay extends JFrame implements DisplayDriver, EventDriver {
     @Override
     public void drawPixel(int x, int y, Color color) {
         pixels[x][y] = color;
-        repaint();
     }
 
     @Override

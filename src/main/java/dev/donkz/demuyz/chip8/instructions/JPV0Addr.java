@@ -3,8 +3,9 @@ package main.java.dev.donkz.demuyz.chip8.instructions;
 import main.java.dev.donkz.demuyz.chip8.Chip8;
 import main.java.dev.donkz.demuyz.chip8.Instruction;
 import main.java.dev.donkz.demuyz.chip8.Register;
+import main.java.dev.donkz.demuyz.core.emulator.Jumping;
 
-public class JPV0Addr extends Instruction {
+public class JPV0Addr extends Instruction implements Jumping {
     public JPV0Addr(int instructionCode, Chip8 cpu) {
         super(instructionCode, cpu, 1);
     }

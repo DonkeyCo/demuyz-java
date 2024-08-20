@@ -29,7 +29,7 @@ public class DRWVxVyN extends Instruction {
         logger.debug(x + ", " + y + " - " + Arrays.toString(sprite) + " " + n, "Instruction", "DRW");
 
         boolean collision = cpu.getDisplay().drawSprite(x, y, sprite, n);
-        cpu.getI().setValue(collision ? 1 : 0);
+        cpu.getRegister(0xF).setValue(collision ? 1 : 0);
     }
 
     @Override

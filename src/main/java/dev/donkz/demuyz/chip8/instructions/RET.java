@@ -2,6 +2,7 @@ package main.java.dev.donkz.demuyz.chip8.instructions;
 
 import main.java.dev.donkz.demuyz.chip8.Chip8;
 import main.java.dev.donkz.demuyz.chip8.Instruction;
+import main.java.dev.donkz.demuyz.core.emulator.Jumping;
 
 public class RET extends Instruction {
     public RET(int instructionCode, Chip8 cpu) {

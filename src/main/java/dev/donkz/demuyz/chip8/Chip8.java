@@ -3,6 +3,7 @@ package main.java.dev.donkz.demuyz.chip8;
 import main.java.dev.donkz.demuyz.chip8.instructions.JP;
 import main.java.dev.donkz.demuyz.core.emulator.BaseInstruction;
 import main.java.dev.donkz.demuyz.core.emulator.CPU;
+import main.java.dev.donkz.demuyz.core.emulator.Jumping;
 import main.java.dev.donkz.demuyz.core.util.binary.BinaryUtil;
 import main.java.dev.donkz.demuyz.core.util.files.FileHandler;
 import main.java.dev.donkz.demuyz.core.util.logger.Logger;
@@ -77,7 +78,7 @@ public class Chip8 implements CPU<Integer> {
         Instruction instruction = decode(instructionCode);
         execute(instruction);
 
-        if (!(instruction instanceof JP)) {
+        if (!(instruction instanceof Jumping)) {
             PC += 2;
         }
     }
