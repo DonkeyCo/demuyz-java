@@ -22,7 +22,7 @@ public class SUBVxVy extends Instruction {
         logger.debug(x.getValue() + " - " + y.getValue());
 
         int carry = 0;
-        if (x.getValue() > y.getValue()) {
+        if (x.getValue() >= y.getValue()) {
             carry = 1;
         }
 

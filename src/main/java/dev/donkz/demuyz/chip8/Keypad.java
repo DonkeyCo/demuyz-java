@@ -1,32 +1,59 @@
 package main.java.dev.donkz.demuyz.chip8;
 
-import main.java.dev.donkz.demuyz.core.driver.EventDriver;
+import main.java.dev.donkz.demuyz.chip8.util.C8Keys;
+import main.java.dev.donkz.demuyz.core.base.*;
 import main.java.dev.donkz.demuyz.core.driver.InputDriver;
+import main.java.dev.donkz.demuyz.core.emulator.BaseInput;
+import main.java.dev.donkz.demuyz.core.event.Callback;
+import main.java.dev.donkz.demuyz.core.event.KeyEventInfo;
 
-public class Keypad {
-    public enum Key {
-        ONE('1'), TWO('2'), THREE('3'), C('4'),
-        FOUR('Q'), FIVE('W'), SIX('E'), D('R'),
-        SEVEN('A'), EIGHT('S'), NINE('D'), E('F'),
-        A('Z'), ZERO('X'), B('C'), F('V');
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-        public final char key;
-        Key(char key) {
-            this.key = key;
-        }
-    }
-
-    private final InputDriver driver;
+public class Keypad extends BaseInput {
+    private final Set<C8Keys> pressedKeys;
+    private final Map<C8Keys, Callback<KeyEventInfo>> waitMap;
 
     public Keypad(InputDriver driver) {
-        this.driver = driver;
+        super(driver);
+        pressedKeys = new HashSet<>();
+        waitMap = new HashMap<>();
+
+        initialize();
     }
 
-    public void connect(EventDriver eventDriver) {
-        eventDriver.registerInput(driver);
+    private void initialize() {
+        driver.register(ActionState.PRESSED, this::pressed);
+        driver.register(ActionState.RELEASED, this::released);
     }
 
-    public InputDriver getDriver() {
-        return driver;
+    private void pressed(KeyEventInfo eventInfo) {
+        C8Keys key = C8Keys.fromCode(eventInfo.code());
+        if (waitMap.containsKey(key)) {
+            Callback<KeyEventInfo> callback = waitMap.remove(key);
+            callback.execute(eventInfo);
+        } else if (waitMap.containsKey(C8Keys.ANY)) {
+            Callback<KeyEventInfo> callback = waitMap.remove(C8Keys.ANY);
+            callback.execute(eventInfo);
+        }
+        pressedKeys.add(key);
+    }
+
+    private void released(KeyEventInfo eventInfo) {
+        pressedKeys.remove(C8Keys.fromCode(eventInfo.code()));
+    }
+
+    public boolean isKeyPressed(C8Keys key) {
+        return pressedKeys.contains(key);
+    }
+
+    public void waitForKeyPress(C8Keys key, Callback<KeyEventInfo> callback) {
+        waitMap.put(key, callback);
+    }
+
+    public void waitForKeyPress(Callback<KeyEventInfo> callback) {
+        waitMap.put(C8Keys.ANY, callback);
     }
 }

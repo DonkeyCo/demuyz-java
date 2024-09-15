@@ -21,7 +21,7 @@ public class SUBNVxVy extends Instruction {
 
         int diff = y.getValue() - x.getValue();
         int borrow = 0;
-        if (y.getValue() > x.getValue()) {
+        if (y.getValue() >= x.getValue()) {
             borrow = 1;
         }
 

@@ -3,6 +3,7 @@ package dev.donkz.demuyz.util;
 import dev.donkz.demuyz.timendus.SplashScreenTest;
 import main.java.dev.donkz.demuyz.chip8.Chip8;
 import main.java.dev.donkz.demuyz.core.util.logger.Logger;
+import main.java.dev.donkz.demuyz.swing.SwingDriver;
 
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
@@ -13,7 +14,8 @@ import java.nio.file.Paths;
 public class TestUtil {
     public static void runTestFile(String filename) throws FileNotFoundException {
         Logger logger = new Logger(false);
-        Chip8 chip8 = new Chip8(logger);
+        SwingDriver swingDriver = new SwingDriver(64, 32, 5);
+        Chip8 chip8 = new Chip8(swingDriver, swingDriver.getInputDriver(), logger);
 
         URL resourceUrl = SplashScreenTest.class.getClassLoader().getResource(filename);
 

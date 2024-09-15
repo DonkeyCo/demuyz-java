@@ -1,33 +1,36 @@
 package main.java.dev.donkz.demuyz.swing;
 
 import main.java.dev.donkz.demuyz.core.base.Color;
-import main.java.dev.donkz.demuyz.core.driver.DisplayDriver;
-import main.java.dev.donkz.demuyz.core.driver.EventDriver;
+import main.java.dev.donkz.demuyz.core.base.Interaction;
 import main.java.dev.donkz.demuyz.core.driver.InputDriver;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.util.Objects;
 
-public class SwingDisplay extends JFrame implements DisplayDriver, EventDriver {
+public class SwingDriver extends JFrame implements main.java.dev.donkz.demuyz.core.driver.DisplayDriver {
 
     private int screenWidth;
     private int screenHeight;
     private int factor;
     private Color[][] pixels;
     private Canvas canvas;
+    private SwingKeyListener keyListener;
 
-    public SwingDisplay(int screenWidth, int screenHeight) {
+    public SwingDriver(int screenWidth, int screenHeight) {
         this(screenWidth, screenHeight, 1);
     }
 
-    public SwingDisplay(int screenWidth, int screenHeight, int factor) {
+    public SwingDriver(int screenWidth, int screenHeight, int factor) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.factor = factor;
         this.pixels = new Color[screenWidth][screenHeight];
+        this.keyListener = new SwingKeyListener();
     }
 
     private void initialize() {
@@ -43,6 +46,7 @@ public class SwingDisplay extends JFrame implements DisplayDriver, EventDriver {
 
         this.setLayout(layout);
         this.add(canvas);
+        canvas.addKeyListener(keyListener);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -121,9 +125,7 @@ public class SwingDisplay extends JFrame implements DisplayDriver, EventDriver {
         return screenHeight;
     }
 
-    @Override
-    public void registerInput(InputDriver driver) {
-        KeyListener listener = (KeyListener) driver;
-        this.addKeyListener(listener);
+    public InputDriver getInputDriver() {
+        return this.keyListener;
     }
 }

@@ -4,6 +4,7 @@ import main.java.dev.donkz.demuyz.chip8.Chip8;
 import main.java.dev.donkz.demuyz.chip8.Instruction;
 import main.java.dev.donkz.demuyz.chip8.Register;
 import main.java.dev.donkz.demuyz.chip8.util.Assertions;
+import main.java.dev.donkz.demuyz.chip8.util.C8Keys;
 
 public class SKNPVx extends Instruction {
     public SKNPVx(int instructionCode, Chip8 cpu) {
@@ -17,7 +18,9 @@ public class SKNPVx extends Instruction {
         Assertions.assertRegister(parameters[0]);
         Register vx = cpu.getRegister(parameters[0]);
 
-        // TODO: Handle keypress
+        if (!cpu.getKeypad().isKeyPressed(C8Keys.fromValue(vx.getValue()))) {
+            cpu.setPC(cpu.getPC() + 2);
+        }
     }
 
     @Override

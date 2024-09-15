@@ -1,8 +1,6 @@
 package main.java.dev.donkz.demuyz.chip8;
 
 import main.java.dev.donkz.demuyz.core.driver.DisplayDriver;
-import main.java.dev.donkz.demuyz.core.driver.EventDriver;
-import main.java.dev.donkz.demuyz.core.driver.InputDriver;
 import main.java.dev.donkz.demuyz.core.emulator.BaseDisplay;
 
 import java.util.Arrays;
@@ -24,8 +22,6 @@ public class Display extends BaseDisplay {
                 int bit = (spriteByte >> b) & 1;
                 int pX = (x + 7 - b) % driver.getScreenWidth(), pY = (y + i) % driver.getScreenHeight();
 
-                main.java.dev.donkz.demuyz.core.base.Color cdsa = driver.getPixel(pX, pY);
-
                 int currentColor = Arrays.stream(Color.values())
                         .filter(c -> c.color == driver.getPixel(pX, pY))
                         .findFirst().orElse(Color.BLACK).ordinal();
@@ -42,13 +38,5 @@ public class Display extends BaseDisplay {
 
     public void clearDisplay() {
         driver.clearDisplay();
-    }
-
-    // TODO: Maybe put this into the Interface?
-    public void connectPeripherals(InputDriver...inputDrivers) {
-        EventDriver eventDriver = (EventDriver) driver;
-        for (InputDriver input : inputDrivers) {
-            eventDriver.registerInput(input);
-        }
     }
 }

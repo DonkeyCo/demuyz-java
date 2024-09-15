@@ -1,10 +1,11 @@
 package main.java.dev.donkz.demuyz.core.driver;
 
-import main.java.dev.donkz.demuyz.core.base.Interaction;
-import main.java.dev.donkz.demuyz.core.base.KeyCode;
+import main.java.dev.donkz.demuyz.core.base.ActionState;
+import main.java.dev.donkz.demuyz.core.event.Callback;
+import main.java.dev.donkz.demuyz.core.event.KeyEventInfo;
 
 public interface InputDriver {
-    void registerKey(KeyCode keyCode, Interaction action);
-    void keyPressed(KeyCode keyCode);
-    KeyCode getKeyCode(char key);
+    void register(ActionState state, Callback<KeyEventInfo> callback);
+    void deregister(ActionState state, Callback<KeyEventInfo> callback);
+    void reset();
 }

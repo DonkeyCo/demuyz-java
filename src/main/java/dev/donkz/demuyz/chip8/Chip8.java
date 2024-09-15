@@ -1,14 +1,14 @@
 package main.java.dev.donkz.demuyz.chip8;
 
-import main.java.dev.donkz.demuyz.chip8.instructions.JP;
+import main.java.dev.donkz.demuyz.core.driver.DisplayDriver;
+import main.java.dev.donkz.demuyz.core.driver.InputDriver;
 import main.java.dev.donkz.demuyz.core.emulator.BaseInstruction;
 import main.java.dev.donkz.demuyz.core.emulator.CPU;
 import main.java.dev.donkz.demuyz.core.emulator.Jumping;
 import main.java.dev.donkz.demuyz.core.util.binary.BinaryUtil;
 import main.java.dev.donkz.demuyz.core.util.files.FileHandler;
 import main.java.dev.donkz.demuyz.core.util.logger.Logger;
-import main.java.dev.donkz.demuyz.swing.KeypadDriver;
-import main.java.dev.donkz.demuyz.swing.SwingDisplay;
+import main.java.dev.donkz.demuyz.swing.SwingDriver;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -20,12 +20,12 @@ import java.util.stream.Stream;
 
 public class Chip8 implements CPU<Integer> {
     public static final int REGISTERS = 16;
-    public static final long CYCLE_TIME = 60L;
+    public static final long CYCLE_TIME = 10L;
 
     private final Logger logger;
     private final Memory memory;
-    private final Keypad keypad;
     private final Display display;
+    private final Keypad keypad;
     private int PC;
     private final Register I;
     private final Stack<Integer> stack;
@@ -33,11 +33,11 @@ public class Chip8 implements CPU<Integer> {
     private final Timer sound;
     private final Register[] registers;
 
-    public Chip8(Logger logger) {
+    public Chip8(DisplayDriver displayDriver, InputDriver inputDriver, Logger logger) {
         this.logger = logger;
         memory = new Memory();
-        display = new Display(new SwingDisplay(64, 32, 5));
-        keypad = new Keypad(new KeypadDriver());
+        display = new Display(displayDriver);
+        keypad = new Keypad(inputDriver);
         PC = 0x200;
         I = new Register();
         stack = new Stack<>();
@@ -56,7 +56,6 @@ public class Chip8 implements CPU<Integer> {
 
     @Override
     public void start() {
-        display.connectPeripherals(keypad.getDriver());
         display.on();
         ScheduledExecutorService s = new ScheduledThreadPoolExecutor(1);
         s.scheduleAtFixedRate(this::cycle, 0, CYCLE_TIME, TimeUnit.MILLISECONDS);
@@ -67,7 +66,7 @@ public class Chip8 implements CPU<Integer> {
         try {
             cycle();
         } catch (Throwable t) {
-            System.out.println("Caught exception in Chip8#run. StackTrace: \n" + t.getStackTrace());
+            System.out.println("Caught exception in Chip8#run. StackTrace: \n" + Arrays.toString(t.getStackTrace()));
         }
     }
 
@@ -152,6 +151,10 @@ public class Chip8 implements CPU<Integer> {
 
     public Display getDisplay() {
         return display;
+    }
+
+    public Keypad getKeypad() {
+        return keypad;
     }
 
     public Register getI() {
